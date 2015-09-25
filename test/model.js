@@ -21,6 +21,25 @@
 
   });
 
+  test("extend with multi inheritance", 2, function() {
+    var module1 = {
+      function1: function() {
+        return 'return1';
+      }
+    };
+
+    var module2 = {
+      function2: function() {
+        return 'return2';
+      }
+    };
+
+    var Model = Backbone.Model.extend({}, {}, [module1, module2]);
+    var model = new Model();
+    equal(model.function1(), 'return1');
+    equal(model.function2(), 'return2');
+  });
+
   test("initialize", 3, function() {
     var Model = Backbone.Model.extend({
       initialize: function() {

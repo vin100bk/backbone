@@ -1839,7 +1839,7 @@
   // Helper function to correctly set up the prototype chain for subclasses.
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
-  var extend = function(protoProps, staticProps) {
+  var extend = function(protoProps, staticProps, modules) {
     var parent = this;
     var child;
 
@@ -1854,6 +1854,12 @@
 
     // Add static properties to the constructor function, if supplied.
     _.extend(child, parent, staticProps);
+
+    // Add multi inheritance properties from modules to the constructor function, if supplied
+    if(modules) {
+      modules.unshift(protoProps);
+      _.extend.apply(this, modules);
+    }
 
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function and add the prototype properties.

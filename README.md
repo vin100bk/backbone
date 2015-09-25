@@ -1,34 +1,56 @@
-     ____                     __      __
-    /\  _`\                  /\ \    /\ \                                   __
-    \ \ \ \ \     __      ___\ \ \/'\\ \ \____    ___     ___      __      /\_\    ____
-     \ \  _ <'  /'__`\   /'___\ \ , < \ \ '__`\  / __`\ /' _ `\  /'__`\    \/\ \  /',__\
-      \ \ \ \ \/\ \ \.\_/\ \__/\ \ \\`\\ \ \ \ \/\ \ \ \/\ \/\ \/\  __/  __ \ \ \/\__, `\
-       \ \____/\ \__/.\_\ \____\\ \_\ \_\ \_,__/\ \____/\ \_\ \_\ \____\/\_\_\ \ \/\____/
-        \/___/  \/__/\/_/\/____/ \/_/\/_/\/___/  \/___/  \/_/\/_/\/____/\/_/\ \_\ \/___/
-                                                                           \ \____/
-                                                                            \/___/
-    (_'_______________________________________________________________________________'_)
-    (_.———————————————————————————————————————————————————————————————————————————————._)
+# Backbone modules (multi inheritance)
+A multi inheritance capability for Backbone. This feature is close to other ones you can find in some other technologies:
+- PHP: http://php.net/manual/en/language.oop5.traits.php
+- Ruby (only for instance methods): http://ruby-doc.org/core-2.2.0/Module.html
 
+## Example
+### Define your module
+```js
+/**
+ * Module cache
+ * @type {{cache: Function, isCached: Function}}
+ */
+var cache = {
+    /**
+     * Cache the entity
+     * @param cacheKey
+     */
+    cache: function (cacheKey) {
+        // Implementation of your cache system
+    },
 
-Backbone supplies structure to JavaScript-heavy applications by providing models with key-value binding and custom events, collections with a rich API of enumerable functions, views with declarative event handling, and connects it all to your existing application over a RESTful JSON interface.
+    /**
+     * Is the entity cached?
+     * @param cacheKey
+     */
+    isCached: function(cacheKey) {
+        // ...
+    }
+};
+```
 
-For Docs, License, Tests, pre-packed downloads, and everything else, really, see:
-http://backbonejs.org
+### Define your component
+```js
+var model = Backbone.Model.extend({
+    initialize: function() {
+        // ...
+    },
 
-To suggest a feature or report a bug:
-https://github.com/jashkenas/backbone/issues
+    // Whatever you want ...
+}, {}, [cache]); // You specify the modules dependency
+```
 
-For questions on working with Backbone or general discussions:
-https://groups.google.com/forum/#!forum/backbonejs,
-http://stackoverflow.com/questions/tagged/backbone.js, or
-https://gitter.im/jashkenas/backbone
+### Instantiate your component and use module properties
+```js
+var model = new Model({
 
-Backbone is an open-sourced component of DocumentCloud:
-https://github.com/documentcloud
+});
+// ...
 
-Many thanks to our contributors:
-https://github.com/jashkenas/backbone/graphs/contributors
+// After manipulate your model, you want to cache it
+if(!model->isCached()) {
+    model->cache();
+}
+```
 
-Special thanks to Robert Kieffer for the original philosophy behind Backbone.
-https://github.com/broofa
+In my example I use a model but you can use this feature for all Backbone components: the model, collection, router, view and history.
